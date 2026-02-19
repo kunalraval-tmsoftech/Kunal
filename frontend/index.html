@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Maintenance Module</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav id="app-sidebar" class="sidebar col-md-3 col-sm-12">
+            <div class="logo">
+                <h2>📦 Stock Module</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showSection('dashboard', event)" class="nav-link active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                <li><a href="#" onclick="showSection('products', event)" class="nav-link"><i class="bi bi-box-seam me-2"></i>Products</a></li>
+                <li><a href="#" onclick="showSection('opening-stock', event)" class="nav-link"><i class="bi bi-calendar-plus me-2"></i>Opening Stock</a></li>
+                <li><a href="#" onclick="showSection('inward-stock', event)" class="nav-link"><i class="bi bi-arrow-down-circle me-2"></i>Inward Stock</a></li>
+                <li><a href="#" onclick="showSection('outward-stock', event)" class="nav-link"><i class="bi bi-arrow-up-circle me-2"></i>Outward Stock</a></li>
+                <li><span class="dropdown-toggle">Reports ▼</span>
+                    <ul class="sub-menu">
+                        <li><a href="#" onclick="showReport('summary', event)" class="nav-link"><i class="bi bi-list-columns-reverse me-2"></i>Stock Summary</a></li>
+                        <li><a href="#" onclick="showReport('inward', event)" class="nav-link"><i class="bi bi-arrow-down-left-circle me-2"></i>Inward Report</a></li>
+                        <li><a href="#" onclick="showReport('outward', event)" class="nav-link"><i class="bi bi-arrow-up-right-circle me-2"></i>Outward Report</a></li>
+                        <li><a href="#" onclick="showReport('movement', event)" class="nav-link"><i class="bi bi-graph-up me-2"></i>Stock Movement</a></li>
+                        <li><a href="#" onclick="showReport('transaction', event)" class="nav-link"><i class="bi bi-clock-history me-2"></i>Transaction History</a></li>
+                        <li><a href="#" onclick="showReport('low-stock', event)" class="nav-link"><i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alert</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content col-md-9 col-sm-12">
+            <!-- Header -->
+            <header class="header d-flex justify-content-between align-items-center py-3">
+                <div class="d-flex align-items-center">
+                    <button id="sidebarToggle" class="btn btn-outline-light me-2 d-md-none d-lg-inline"><i class="bi bi-list"></i></button>
+                    <h1 class="h4 mb-0">Stock Maintenance System</h1>
+                </div>
+                <div class="header-info">
+                    <span id="current-date"></span>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section active">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>Total Products</h3>
+                            <p class="dashboard-value" id="total-products">0</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Opening Stock Value</h3>
+                            <p class="dashboard-value" id="opening-value">₹0</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Inward Stock Value</h3>
+                            <p class="dashboard-value" id="inward-value">₹0</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Outward Stock Value</h3>
+                            <p class="dashboard-value" id="outward-value">₹0</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-section" style="margin-top: 20px;">
+                        <h3>Low Stock Items</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Code</th>
+                                    <th>Current Stock</th>
+                                    <th>Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="low-stock-table">
+                                <tr><td colspan="4" class="no-data">No low stock items</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Products Section -->
+                <section id="products" class="section">
+                    <h2>Products Management</h2>
+                    <div class="form-container">
+                        <form id="product-form" class="form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="product-name">Product Name *</label>
+                                    <input type="text" id="product-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-code">Product Code *</label>
+                                    <input type="text" id="product-code" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-unit">Unit</label>
+                                    <select id="product-unit">
+                                        <option value="nos">Numbers (nos)</option>
+                                        <option value="kg">Kilogram (kg)</option>
+                                        <option value="litre">Litre (L)</option>
+                                        <option value="box">Box</option>
+                                        <option value="pack">Pack</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Product</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-container">
+                        <h3>Product List</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Product Code</th>
+                                    <th>Unit</th>
+                                    <th>Created Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table">
+                                <tr><td colspan="4" class="no-data">No products added</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Opening Stock Section -->
+                <section id="opening-stock" class="section">
+                    <h2>Opening Stock Entry</h2>
+                    <div class="form-container">
+                        <form id="opening-stock-form" class="form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="opening-product">Select Product *</label>
+                                    <select id="opening-product" required>
+                                        <option value="">-- Select Product --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="opening-quantity">Quantity *</label>
+                                    <input type="number" id="opening-quantity" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="opening-rate">Rate (₹) *</label>
+                                    <input type="number" id="opening-rate" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="opening-date">Date *</label>
+                                    <input type="date" id="opening-date" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Opening Stock</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-container">
+                        <h3>Opening Stock Records</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Rate (₹)</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="opening-stock-table">
+                                <tr><td colspan="5" class="no-data">No records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Inward Stock Section -->
+                <section id="inward-stock" class="section">
+                    <h2>Inward Stock (Purchase/Receipt)</h2>
+                    <div class="form-container">
+                        <form id="inward-stock-form" class="form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inward-product">Select Product *</label>
+                                    <select id="inward-product" required>
+                                        <option value="">-- Select Product --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inward-quantity">Quantity *</label>
+                                    <input type="number" id="inward-quantity" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inward-rate">Rate (₹) *</label>
+                                    <input type="number" id="inward-rate" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inward-supplier">Supplier</label>
+                                    <input type="text" id="inward-supplier">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inward-date">Date *</label>
+                                    <input type="date" id="inward-date" required>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="inward-remarks">Remarks</label>
+                                    <input type="text" id="inward-remarks" placeholder="Optional remarks">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Inward Stock</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-container">
+                        <h3>Inward Stock Records</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Rate (₹)</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Supplier</th>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inward-stock-table">
+                                <tr><td colspan="7" class="no-data">No records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Outward Stock Section -->
+                <section id="outward-stock" class="section">
+                    <h2>Outward Stock (Sales/Issue)</h2>
+                    <div class="form-container">
+                        <form id="outward-stock-form" class="form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="outward-product">Select Product *</label>
+                                    <select id="outward-product" required>
+                                        <option value="">-- Select Product --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="outward-quantity">Quantity *</label>
+                                    <input type="number" id="outward-quantity" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="outward-rate">Rate (₹) *</label>
+                                    <input type="number" id="outward-rate" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="outward-customer">Customer</label>
+                                    <input type="text" id="outward-customer">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="outward-date">Date *</label>
+                                    <input type="date" id="outward-date" required>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="outward-remarks">Remarks</label>
+                                    <input type="text" id="outward-remarks" placeholder="Optional remarks">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Outward Stock</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-container">
+                        <h3>Outward Stock Records</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Rate (₹)</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outward-stock-table">
+                                <tr><td colspan="7" class="no-data">No records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="section">
+                    <h2 id="report-title">Reports</h2>
+                    <div class="report-container">
+                        <div class="report-controls">
+                            <button onclick="printReport()" class="btn btn-secondary">🖨️ Print</button>
+                            <button onclick="exportToCSV()" class="btn btn-secondary">📊 Export CSV</button>
+                        </div>
+                        <div id="report-content" class="table-container">
+                            <table class="data-table" id="report-table">
+                                <tbody>
+                                    <tr><td class="no-data">Select a report to view</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAlert()">&times;</span>
+            <p id="alert-message"></p>
+            <button onclick="closeAlert()" class="btn btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
